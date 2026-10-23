@@ -3,6 +3,8 @@
 ## 1.0.0
 
 Initial DPDL v1 contract, packaged as `@olympion/dpdl-schema` version 1.0.0.
+Added the v1.0.0 Delivery Planner definition and extended the schema for its identity, profile,
+knowledge domains, KPIs, collaboration model, and runtime configuration.
 The root definition contains:
 
 - `id` (string), `name` (string), `version` (semantic-version string),

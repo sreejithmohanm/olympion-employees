@@ -52,6 +52,52 @@ properties:
       type: string
       description: A capability identifier.
       minLength: 1
+  identity:
+    type: object
+    description: Human-readable identity details for the digital professional.
+    additionalProperties: false
+    required:
+      - name
+      - role
+      - domain
+    properties:
+      name:
+        type: string
+        description: Human-readable name of the digital professional.
+        minLength: 1
+      role:
+        type: string
+        description: Primary function performed by the digital professional.
+        minLength: 1
+      domain:
+        type: string
+        description: Catalog domain that owns this digital professional.
+        enum:
+          - business
+          - engineering
+          - finance
+          - operations
+          - retail
+          - security
+  profile:
+    type: object
+    description: Summary and working style of the digital professional.
+    additionalProperties: false
+    required:
+      - summary
+    properties:
+      summary:
+        type: string
+        description: Summary of the professional's approach and expertise.
+        minLength: 1
+      communicationStyle:
+        type: string
+        description: How the professional communicates.
+        minLength: 1
+      workingStyle:
+        type: string
+        description: How the professional approaches work.
+        minLength: 1
   skills:
     type: array
     description: Skills used to deliver the listed capabilities.
@@ -66,6 +112,14 @@ properties:
     items:
       type: string
       description: A responsibility.
+      minLength: 1
+  knowledgeDomains:
+    type: array
+    description: Subject areas the digital professional is knowledgeable in.
+    uniqueItems: true
+    items:
+      type: string
+      description: A knowledge domain.
       minLength: 1
   tools:
     type: array
@@ -123,6 +177,57 @@ properties:
             type: string
             description: A workflow action.
             minLength: 1
+  kpis:
+    type: array
+    description: Measures used to evaluate the digital professional's performance.
+    items:
+      type: object
+      additionalProperties: false
+      required:
+        - name
+        - description
+        - target
+      properties:
+        name:
+          type: string
+          description: Name of the performance indicator.
+          minLength: 1
+        description:
+          type: string
+          description: What the performance indicator measures.
+          minLength: 1
+        target:
+          type: string
+          description: Desired outcome for the performance indicator.
+          minLength: 1
+  collaborationModel:
+    type: object
+    description: Declares collaboration and delegation relationships.
+    additionalProperties: false
+    required:
+      - canDelegate
+    properties:
+      canDelegate:
+        type: array
+        description: Roles to which work may be delegated.
+        minItems: 1
+        uniqueItems: true
+        items:
+          type: string
+          description: A role that can receive delegated work.
+          minLength: 1
+  runtime:
+    type: object
+    description: Runtime configuration for the digital professional.
+    additionalProperties: false
+    required:
+      - model
+    properties:
+      model:
+        type: string
+        description: Identifier of the model used at runtime.
+        minLength: 1
+        pattern: ^[A-Za-z0-9][A-Za-z0-9._:/-]*$
   guardrails:
     type: array
     description: Constraints that limit the digital professional's behavior.
