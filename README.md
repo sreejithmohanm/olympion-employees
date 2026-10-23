@@ -5,6 +5,7 @@ This repository contains Digital Professional Definition Language (DPDL) employe
 ## Repository layout
 
 - `engineering/` — engineering standards and implementation guidance.
+- `finance/`, `retail/`, `operations/`, `security/` — domain definitions for those functions.
 - `business/` — business capabilities and domain definitions.
 - `schemas/` — versioned DPDL schemas.
 - `templates/` — employee definition templates validated in CI.
@@ -13,10 +14,10 @@ This repository contains Digital Professional Definition Language (DPDL) employe
 
 ## Author an employee definition
 
-1. Copy `templates/employee.yaml` into `examples/` or the appropriate catalog location.
+1. Copy an example from `examples/` (or `templates/employee.yaml`) into the appropriate domain directory, e.g. `engineering/` or `business/`.
 2. Set a unique kebab-case `id`, a human-readable `name`, a semantic `version`, and a concise `description` and `role`.
 3. Add one or more `capabilities`, then optionally list `skills`, `responsibilities`, `tools`, `guardrails`, and custom `extensions`.
-4. Validate the YAML against the DPDL v1 schema:
+4. Validate the YAML against the DPDL v1 schema locally:
 
    ```sh
    python -m pip install -r requirements-dev.txt
@@ -24,7 +25,9 @@ This repository contains Digital Professional Definition Language (DPDL) employe
    python -m unittest discover -s tests -v
    ```
 
-The schema defines all required fields, types, and constraints. CI validates every `.yaml` and `.yml` file under `templates/` on each pull request.
+5. Open a pull request. CI must pass before merge.
+
+The schema defines all required fields, types, and constraints. CI validates every `.yaml` and `.yml` file under `templates/`, `examples/`, `engineering/`, and `business/` on each pull request.
 
 ## Schema package
 
