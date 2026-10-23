@@ -10,7 +10,7 @@ from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = ROOT / "schemas" / "dpdl-v1.yaml"
-TEMPLATES_PATH = ROOT / "templates"
+SCAN_DIRS = ("templates", "examples", "engineering", "business")
 
 
 def main() -> int:
@@ -20,10 +20,11 @@ def main() -> int:
     template_paths = sorted(
         path
         for pattern in ("*.yaml", "*.yml")
-        for path in TEMPLATES_PATH.rglob(pattern)
+        for directory in SCAN_DIRS
+        for path in (ROOT / directory).rglob(pattern)
     )
     if not template_paths:
-        print(f"No YAML templates found in {TEMPLATES_PATH}", file=sys.stderr)
+        print(f"No YAML templates found in {", ".join(SCAN_DIRS)}", file=sys.stderr)
         return 1
 
     failed = False
