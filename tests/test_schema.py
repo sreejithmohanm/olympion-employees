@@ -65,6 +65,52 @@ class DpdlSchemaTests(unittest.TestCase):
         self.assertIn("Principal Engineer", planner["collaborationModel"]["canDelegate"])
         self.assertTrue(planner["runtime"]["model"])
 
+    def test_principal_engineer_definition_is_complete_and_valid(self):
+        principal = yaml.safe_load(
+            (
+                ROOT
+                / "engineering"
+                / "principal-engineer"
+                / "v1.0.0"
+                / "principal-engineer.yaml"
+            ).read_text(encoding="utf-8")
+        )
+        Draft202012Validator(SCHEMA).validate(principal)
+
+        for field in (
+            "identity",
+            "profile",
+            "responsibilities",
+            "skills",
+            "capabilities",
+            "knowledgeDomains",
+            "workflows",
+            "kpis",
+            "memoryModel",
+            "collaborationModel",
+            "guardrails",
+            "runtime",
+        ):
+            with self.subTest(field=field):
+                self.assertIn(field, principal)
+
+        self.assertTrue(
+            {
+                "pullrequest.review",
+                "pullrequest.merge",
+                "pullrequest.comment",
+                "repository.read",
+                "task.assign",
+                "task.read",
+            }.issubset(principal["capabilities"])
+        )
+        self.assertIn("Senior Software Engineer", principal["collaborationModel"]["canDelegate"])
+        self.assertIn("Delivery Planner", principal["collaborationModel"]["canReceiveFrom"])
+        guardrails = [guardrail["description"].lower() for guardrail in principal["guardrails"]]
+        self.assertTrue(any("directly to the main branch" in guardrail for guardrail in guardrails))
+        self.assertTrue(any("ci checks pass" in guardrail for guardrail in guardrails))
+        self.assertTrue(principal["runtime"]["model"])
+
     def test_required_fields_and_unknown_fields_are_rejected(self):
         definition = {
             "id": "customer-support",

@@ -216,6 +216,15 @@ properties:
           type: string
           description: A role that can receive delegated work.
           minLength: 1
+      canReceiveFrom:
+        type: array
+        description: Roles from which work may be received.
+        minItems: 1
+        uniqueItems: true
+        items:
+          type: string
+          description: A role that can assign or hand off work.
+          minLength: 1
   runtime:
     type: object
     description: Runtime configuration for the digital professional.
