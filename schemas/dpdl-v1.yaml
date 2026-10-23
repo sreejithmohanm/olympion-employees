@@ -1,7 +1,7 @@
 $schema: https://json-schema.org/draft/2020-12/schema
 $id: https://olympion.dev/schemas/dpdl-v1.yaml
 title: Olympion Digital Professional Definition Language v1
-description: A versioned contract for an employee catalog digital professional definition.
+description: Version 1.0.0 contract for an employee catalog digital professional definition.
 type: object
 additionalProperties: false
 required:
@@ -9,6 +9,7 @@ required:
   - name
   - version
   - description
+  - domain
   - role
   - capabilities
 properties:
@@ -18,6 +19,7 @@ properties:
     pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
   name:
     type: string
+    description: Human-readable name of the digital professional.
     minLength: 1
   version:
     type: string
@@ -25,39 +27,125 @@ properties:
     pattern: ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$
   description:
     type: string
+    description: Concise summary of the digital professional's purpose.
     minLength: 1
+  domain:
+    type: string
+    description: Catalog domain that owns this digital professional.
+    enum:
+      - business
+      - engineering
+      - finance
+      - operations
+      - retail
+      - security
   role:
     type: string
+    description: The primary function performed by the digital professional.
     minLength: 1
   capabilities:
     type: array
+    description: Actions or outcomes the digital professional can deliver.
     minItems: 1
     uniqueItems: true
     items:
       type: string
+      description: A capability identifier.
       minLength: 1
   skills:
     type: array
+    description: Skills used to deliver the listed capabilities.
     uniqueItems: true
     items:
       type: string
+      description: A skill identifier.
       minLength: 1
   responsibilities:
     type: array
+    description: Duties assigned to the digital professional.
     items:
       type: string
+      description: A responsibility.
       minLength: 1
   tools:
     type: array
+    description: Tools the digital professional may use.
     uniqueItems: true
     items:
       type: string
+      description: A tool identifier.
       minLength: 1
+  memoryModel:
+    type: object
+    description: Declares the scope of information retained between interactions.
+    additionalProperties: false
+    required:
+      - scope
+    properties:
+      scope:
+        type: string
+        description: Persistence scope for information retained by the professional.
+        enum:
+          - none
+          - session
+          - user
+          - organization
+  workflows:
+    type: array
+    description: Workflows the digital professional can perform.
+    items:
+      type: object
+      description: A named workflow and its operational role.
+      additionalProperties: false
+      required:
+        - name
+        - role
+      properties:
+        name:
+          type: string
+          description: Name of the workflow.
+          minLength: 1
+        description:
+          type: string
+          description: Summary of the workflow.
+          minLength: 1
+        role:
+          type: string
+          description: How the workflow contributes to the professional's work.
+          enum:
+            - primary
+            - supporting
+            - fallback
+        steps:
+          type: array
+          description: Ordered actions performed by the workflow.
+          items:
+            type: string
+            description: A workflow action.
+            minLength: 1
   guardrails:
     type: array
+    description: Constraints that limit the digital professional's behavior.
     items:
-      type: string
-      minLength: 1
+      type: object
+      description: A behavioral constraint and its severity.
+      additionalProperties: false
+      required:
+        - description
+        - severity
+      properties:
+        description:
+          type: string
+          description: The behavior that is prohibited or constrained.
+          minLength: 1
+        severity:
+          type: string
+          description: Impact level if the constraint is violated.
+          enum:
+            - low
+            - medium
+            - high
+            - critical
   extensions:
     type: object
     description: Namespaced custom fields that do not change the v1 contract.
