@@ -1,0 +1,15 @@
+{
+  "name": "@olympion/dpdl-schema",
+  "version": "1.0.0",
+  "description": "JSON Schema for Olympion Digital Professional Definition Language",
+  "license": "UNLICENSED",
+  "files": [
+    "schemas/"
+  ],
+  "exports": {
+    "./dpdl-v1.yaml": "./schemas/dpdl-v1.yaml"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
