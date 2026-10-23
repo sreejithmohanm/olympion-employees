@@ -210,7 +210,6 @@ properties:
       canDelegate:
         type: array
         description: Roles to which work may be delegated.
-        minItems: 1
         uniqueItems: true
         items:
           type: string

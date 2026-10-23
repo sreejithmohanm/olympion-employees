@@ -111,6 +111,55 @@ class DpdlSchemaTests(unittest.TestCase):
         self.assertTrue(any("ci checks pass" in guardrail for guardrail in guardrails))
         self.assertTrue(principal["runtime"]["model"])
 
+    def test_developer_definition_is_complete_and_valid(self):
+        developer = yaml.safe_load(
+            (
+                ROOT
+                / "engineering"
+                / "developer"
+                / "v1.0.0"
+                / "developer.yaml"
+            ).read_text(encoding="utf-8")
+        )
+        Draft202012Validator(SCHEMA).validate(developer)
+
+        for field in (
+            "identity",
+            "profile",
+            "responsibilities",
+            "skills",
+            "capabilities",
+            "knowledgeDomains",
+            "workflows",
+            "kpis",
+            "memoryModel",
+            "collaborationModel",
+            "guardrails",
+            "runtime",
+        ):
+            with self.subTest(field=field):
+                self.assertIn(field, developer)
+
+        self.assertTrue(
+            {
+                "repository.read",
+                "repository.write",
+                "pullrequest.create",
+                "pullrequest.update",
+                "pullrequest.comment",
+                "file.read",
+                "file.write",
+            }.issubset(developer["capabilities"])
+        )
+        self.assertEqual([], developer["collaborationModel"]["canDelegate"])
+        self.assertIn("Principal Engineer", developer["collaborationModel"]["canReceiveFrom"])
+        guardrails = [guardrail["description"].lower() for guardrail in developer["guardrails"]]
+        self.assertTrue(any("directly to the main branch" in guardrail for guardrail in guardrails))
+        self.assertTrue(any("without relevant tests" in guardrail for guardrail in guardrails))
+        self.assertTrue(developer["runtime"]["model"])
+        changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+        self.assertIn("v1.0.0 Senior Software Engineer definition", changelog)
+
     def test_required_fields_and_unknown_fields_are_rejected(self):
         definition = {
             "id": "customer-support",
