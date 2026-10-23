@@ -19,6 +19,52 @@ class DpdlSchemaTests(unittest.TestCase):
         )
         Draft202012Validator(SCHEMA).validate(template)
 
+    def test_delivery_planner_definition_is_complete_and_valid(self):
+        planner = yaml.safe_load(
+            (
+                ROOT
+                / "business"
+                / "planner"
+                / "v1.0.0"
+                / "planner.yaml"
+            ).read_text(encoding="utf-8")
+        )
+        Draft202012Validator(SCHEMA).validate(planner)
+
+        for field in (
+            "identity",
+            "profile",
+            "responsibilities",
+            "skills",
+            "capabilities",
+            "knowledgeDomains",
+            "workflows",
+            "kpis",
+            "memoryModel",
+            "collaborationModel",
+            "guardrails",
+            "runtime",
+        ):
+            with self.subTest(field=field):
+                self.assertIn(field, planner)
+
+        self.assertEqual(
+            {
+                "roadmap.write",
+                "roadmap.read",
+                "backlog.read",
+                "backlog.write",
+                "story.create",
+                "story.update",
+                "story.read",
+                "task.create",
+                "task.read",
+            },
+            set(planner["capabilities"]),
+        )
+        self.assertIn("Principal Engineer", planner["collaborationModel"]["canDelegate"])
+        self.assertTrue(planner["runtime"]["model"])
+
     def test_required_fields_and_unknown_fields_are_rejected(self):
         definition = {
             "id": "customer-support",
