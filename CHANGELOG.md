@@ -7,6 +7,8 @@ Added the v1.0.0 Delivery Planner definition and extended the schema for its ide
 knowledge domains, KPIs, collaboration model, and runtime configuration.
 Added the v1.0.0 Principal Engineer definition, including collaboration relationships and
 guardrails for protected-branch commits and CI-verified merges.
+Added the v1.0.0 Senior Software Engineer definition with repository and pull request
+capabilities, Principal Engineer collaboration, and implementation guardrails.
 The root definition contains:
 
 - `id` (string), `name` (string), `version` (semantic-version string),
